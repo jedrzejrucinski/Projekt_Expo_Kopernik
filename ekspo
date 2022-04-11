@@ -1,0 +1,19 @@
+library(readxl)
+library(dplyr)
+library(tidyr)
+Naukobus <- read_excel("PR1/Naukobus.xlsx")
+View(Naukobus)
+
+colnames(Naukobus)
+
+Naukobus_pyt <- Naukobus %>% 
+  select(klasa,contains("W5")) %>% 
+  filter(klasa %in% c(6:8))
+
+df <- Naukobus_pyt %>% 
+  pivot_longer(!klasa, names_to = "ekspo", values_to = "count") %>% 
+  group_by(klasa, ekspo, count) %>% 
+  summarise(Count = n()) %>% 
+  filter(!count %in% c(88,99)) %>% 
+  select(ekspo, klasa, count, Count) %>% 
+  arrange(ekspo, count)
